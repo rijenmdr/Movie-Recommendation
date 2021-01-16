@@ -8,24 +8,27 @@
     </div>
 </section>
 <div class="container" style="margin-top:70px; ">
-<h2 style="margin-top:-40px;" class="text-center">{{title}}</h2>
+<h2 style="margin-top:-40px;" class="text-center">Movies Recommended To You</h2>
 <div class="row">
 {%for a in  object_list.itertuples %}
 <div class="col-md-3">
+     <a style="text-decoration: none; color: black;" href="{% url 'movies:detail' id=a.movieId_id %}">
         <div style="margin-top:10px;"
             class='card text-black mb-3'>
             
-            <div class="card-header" style="background:#3949abd9;color:white""><div class="col-14 text-truncate">{{a.title}}</div></div>
+           <!--  <div class="card-header" style="background:#3949abd9;color:white""><div class="col-14 text-truncate">{{a.title}}</div></div> -->
             <div class="card-body">
-
+                <div class="preview-img">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOCqB2jCAiv5K1PCLFYMnspppobBC7wWzsMQ&usqp=CAU" alt="preview-img">
+                </div>
+                <h4 class="card-text text-black"><div class="col-14 text-truncate" >{{a.title}}</div></h4>
                 <p class="card-text text-black"><div class="col-14 text-truncate">{{a.genres}}</div></p>
-                  <a class="btn btn-sm btn-info" href="{% url 'movies:detail' id=a.movieId_id %}">Detail</a>
+                 <!--  <a class="btn btn-sm btn-info" href="{% url 'movies:detail' id=a.movieId_id %}">Detail</a> -->
 
 
-             
-           
-            </div>
         </div>
+        </div>
+    </a>
     </div>
 
 
