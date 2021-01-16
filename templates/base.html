@@ -21,13 +21,37 @@
     <style>
         
         .pagination {
-            margin-top: 20px;
+            margin: 20px;
             display: inherit;
+        }
+        .pagination .step-links a{
+            background: linear-gradient(45deg, #673AB7, #3F51B5);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 50%;
+            text-align: center;
+        }
+
+        .pagination .step-links .current{
+            color: white;
+            background: linear-gradient(45deg, #673AB7, #3F51B5);
+            padding: 4px 8px;
+            margin: 3px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .pagination .step-links a i{
+            color: white;
+        }
+        .social-media {
+            margin-top:10px; 
         }
         .social-media a{
             color: white;
             font-size: 1rem;
             margin: 2px 4px;
+            text-decoration: none;
         }
     </style>
     <style type="text/css">
@@ -76,7 +100,7 @@
             <!-- Breadcrumb-->
             <div class="breadcrumb-dn mr-fix">
                  <a href="{% url 'movies:home' %}"> 
-                <img style="max-width: 30px;max-height: 30px;" src="{% static 'img/logo.png' %}">
+                <img style="max-width: 30px;max-height: 30px;" src="{% static 'img/logo.png' %}"></a>
             </div>
 
                 <div class="breadcrumb-dn mr-fix">
@@ -133,7 +157,7 @@
                     <a href="#" class="fa fa-twitter"></a>
                     <a href="#" class="fa fa-instagram"></a>
                 </div>
-                <div style="font-size: 1rem; color: white"><p>All Rights Reserved</p></div>
+                <div style="font-size: 1rem; color: white"><p>All Rights Reserved &copy;</p></div>
             </div>
         </div>
     </footer>

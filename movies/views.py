@@ -171,10 +171,15 @@ def recommendation(request):
 def post_list(request):
     query=request.GET.get("title")
     queryset_list=None
+    search=None
+    queryset_count=0
     if query:
+        search = "true"
         queryset_list=Movies.objects.all().filter(title__icontains=query)
         if not queryset_list:
             return render(request, "search.html")
+        else:
+            queryset_count=len(queryset_list)
     else:
         queryset_list=Movies.objects.all()
     userid = request.user.id
@@ -199,7 +204,10 @@ def post_list(request):
         "user_id": userid,
         "user_name": userName,
         "object_list": queryset,
-        "title": "List"}
+        "title": "List",
+        "search": search,
+        "query":query,
+        "search_count":queryset_count}
     return render(request, "home.html", context)
 
 
