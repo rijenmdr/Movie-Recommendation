@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 {% block recommender %}active{% endblock %}
 {% block body %}
+<section class="hero">
+    <div class="hero-inner">
+        <h1>Watch Unlimited Movies</h1>
+        <h2>Look out for the personalized recommended movies</h2>
+    </div>
+</section>
+<div class="container" style="margin-top:130px; ">
 <h2 style="margin-top:-40px;" class="text-center">{{title}}</h2>
 <div class="row">
 {%for a in  object_list.itertuples %}
@@ -24,6 +31,7 @@
 
 {% endfor %}
 <br>
+</div>
 </div>
 <style type="text/css">
 div
@@ -59,6 +67,7 @@ a:hover {
     color: #33739E;
 }
 </style>
+</div>
 <a href="#" id="loadMore">Load More</a>
 <script type="text/javascript">
 
@@ -81,5 +90,4 @@ $(function () {
 
 	
 </script>
-
 {% endblock %}
