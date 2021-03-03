@@ -134,7 +134,7 @@ def recommendation(request):
                      sort_values('Ratings', ascending = False).
                                    iloc[:num_recommendations :1])
             else:
-                title="Popular Movies"
+                title=""
                 movie_ratings = original_ratings_df.groupby('movieId_id')['rating']
                 avg_ratings = movie_ratings.mean()
                 avg_ratings=round(avg_ratings, 2)

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block body %}
 <style type="text/css">
@@ -27,7 +28,11 @@
             </div>
             <div class="column" style=" float: right;
   width: 50%;">
-                <img src="/media/{{detail.photo}}" class="center">
+                <!-- <img src="/media/{{detail.photo}}" class="center"> -->
+                <video style="outline: none;" width="530" height="440" controls autoplay>
+                  <source class="center" src="{% static 'video/movie.mp4' %}" type="video/mp4"> </source>
+                  {% static 'img/logo.png' %}
+                </video>
             </div>
         </div>
             </div>
@@ -59,7 +64,7 @@
         </div>
         {% else %}
         <div class="card">
-            <div class="card-body"style="background: #f5eeee"   >
+            <div class="card-body"style="background: #f5eeee">
                 <h3 class="text-center">You have already reviewed this movie.</h3>
             </div>
         </div>

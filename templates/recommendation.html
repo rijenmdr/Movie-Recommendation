@@ -8,7 +8,11 @@
     </div>
 </section>
 <div class="container" style="margin-top:70px; ">
+    {% if title%}
 <h2 style="margin-top:-40px;" class="text-center">Movies Recommended To You</h2>
+    {% else %}
+<h2 style="margin-top:-40px;" class="text-center">Popular Movies</h2>
+    {% endif %}    
 <div class="row">
 {%for a in  object_list.itertuples %}
 <div class="col-md-3">
