@@ -62,7 +62,7 @@ a:hover {
 #loadMore {
     padding: 10px;
     text-align: center;
-    background:#3949abd9;
+    background:linear-gradient(45deg, #7d7194, #464c71);
     color: #fff;
     border-width: 0 1px 1px 0;
     border-style: solid;
@@ -79,12 +79,12 @@ a:hover {
 }
 </style>
 </div>
-<a href="#" id="loadMore">Load More</a>
+ <a href="#" id="loadMore">Load More</a>
 <script type="text/javascript">
 
 
 $(function () {
-    $("div").slice(0, 76).show();
+    $("div").slice(0, 80).show();
     $("#loadMore").on('click', function (e) {
         e.preventDefault();
         $("div:hidden").slice(0, 72).slideDown();

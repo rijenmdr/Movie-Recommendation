@@ -12,78 +12,19 @@ from django.contrib.auth.decorators import login_required
 import pickle
 import os
 from django.conf import settings
-
 from django.db.models import Avg
 from django_pandas.io import read_frame
 import psycopg2
 from sqlalchemy import create_engine
 from accounts.forms import ReviewForm
-
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-
-#
-# def recommendation(request):
-#     # connection = pymysql.connect("localhost", "postgres", "Ranish1998", "test")
-#     # connection = psycopg2.connect(user = "postgres",
-#                                   # password = "Ranish1998",
-#                                   # host = "localhost",
-#                                   # database = "test")
-#     engine=create_engine('postgresql://postgres:Ranish1998@localhost:5432/test2')
-#
-#     # movies=connection.cursor()
-#     # ratings=connection.cursor()
-#     # movies.execute('SELECT * from movies_movies')
-#     # ratings.execute('SELECT * from movies_ratings')
-#     # movies = pd.read_sql_query("SELECT * from movies_movies",connection)
-#     # ratings = pd.read_sql_query("SELECT * from movies_ratings",connection)
-#     # m=Movies.objects.all()
-#     # r=Ratings.objects.all()
-#
-#     movies= pd.read_sql_query('SELECT * from "movies_movies"',engine)
-#     ratings=pd.read_sql_query('SELECT * from "movies_ratings"',engine)
-#     current_user=request.user.id
-#     print("current user=\n",current_user)
-#
-#     # ratings=pd.merge(movies,ratings).drop(columns=["genres","timestamp"])#["genres","timestamp"],axis=1
-#     # ratings=pd.merge(movies,ratings).drop(columns=["genres"])
-#     print("Ratingssssssss=\n",ratings)
-#
-#
-#     ratings=pd.merge(movies,ratings)#["genres","timestamp"],axis=1
-#
-#
-#     print("ratingsssssssssssssssssssss=\n",ratings)
-#
-#     user_ratings=ratings.pivot_table(index={'userid_id'},columns={'title'},values={'rating'})
-#     # user_ratings=ratings.pivot_table(index={'userId'},columns={'title'},values={'rating'})
-#     movie_user_rating_pivot=user_ratings
-#
-#
-#     user_ratings=user_ratings.fillna(0)
-#     print("USER=\n",user_ratings)
-#
-#
-#     file_ = open(os.path.join(settings.BASE_DIR, 'testfile1'),'rb')
-#     pickle_model = pickle.load(file_)
-#     file_.close()
-#     a=25
-#     b=3634
-#
-#
-#     preds_df = pd.DataFrame(pickle_model, index=user_ratings.index,columns = user_ratings.columns)
-#     # preds_df = pd.DataFrame(pickle_model, a,b)
 def recommendation(request):
-    # connection = pymysql.connect("localhost", "root", "Ranish1998", "movietwo")
 
     engine = create_engine('postgresql://postgres:admin@localhost:1234/movies')
     movies = pd.read_sql_query('SELECT * from "movies_movies"', engine)
     ratings = pd.read_sql_query('SELECT * from "movies_ratings"', engine)
-
-
-    # movies = pd.read_sql_query("SELECT * from movies_movies",connection)
-    # ratings = pd.read_sql_query("SELECT * from movies_ratings",connection)
 
     current_user=request.user.id
     print(current_user)
@@ -113,11 +54,7 @@ def recommendation(request):
             user_data = original_ratings_df[original_ratings_df.userId_id == (userID)]
             user_full = (user_data.merge(movies_df, how = 'left', left_on = 'movieId_id', right_on = 'movieId_id'))
 
-
-
-
             # Get the user's data and merge in the movie information.
-
 
             print('User {0} has already rated {1} movies.'.format(userID, user_full.shape[0]))
             print('Recommending the highest {0} predicted ratings movies not already rated.'.format(num_recommendations))
@@ -149,16 +86,10 @@ def recommendation(request):
 
                 recommendations = (movies_df[~movies_df['movieId_id'].isin(user_full['id'])].merge(movie_recs.sort_values(['avg_rating', 'num_ratings'], ascending=False).iloc[:num_recommendations :1]))
 
-
-
             return user_full, recommendations,title
-
 
     already_rated, predictions,title = recommend_movies(preds_df,current_user, movies, ratings, 50)
     print(predictions)
-
-
-
 
     context = {
          "object_list": predictions,
@@ -181,13 +112,9 @@ def post_list(request):
         else:
             queryset_count=len(queryset_list)
     else:
-        queryset_list=Movies.objects.all()
+        queryset_list=Movies.objects.all().order_by("id")
     userid = request.user.id
     userName = request.user.username
-    # queryset_list = Ratings.objects.select_related('movieId')
-    # queryset_list = Movies.objects.all()
-    # queryset_list = Total.objects.select_related('movieId')
-
 
     paginator = Paginator(queryset_list, 20)
     page = request.GET.get('page')
@@ -212,24 +139,18 @@ def post_list(request):
 
 
 def detail(request,id):
-    # connection = pymysql.connect("localhost", "postgres", "Ranish1998", "test")
-    # ds = pd.read_sql_query("SELECT * from movies_movies", connection)
-    # ratings = pd.read_sql_query("SELECT * from movies_ratings", connection)
     detail = Movies.objects.get(id=id)
     detail_movie = str(detail)
-    # movie_ratings = ratings.groupby('movieId_id')['rating']
-    # avg_ratings = movie_ratings.mean()
+
     rating = Ratings.objects.filter(movieid=id)
     rating=rating.aggregate(rating=Avg('rating'))
-
 
     print("id=",id)
     print("\n detail=",detail)
     print("\n rating=",rating)
     print("userid",request.user.id)
     reviews=Ratings.objects.filter(movieid=id).order_by("comment")
-    # results = cb.getFrames(ds)
-    # content = cb.recommend(item_id=id, num=5,results=results)
+   
     condition="false"
     count=0
     for review in reviews:
@@ -292,7 +213,6 @@ def search(request):
 #edit the review
 def edit_review(request,review_id):
     if request.user.is_authenticated:
-        # movie=Movies.objects.get(id=movie_id)
         #review
         review=Ratings.objects.get(id=review_id)
         movieid=review.movieid
@@ -322,7 +242,6 @@ def edit_review(request,review_id):
 #delete review
 def delete_review(request,review_id):
     if request.user.is_authenticated:
-        # movie=Movies.objects.get(id=movie_id)
         #review
         review=Ratings.objects.get(id=review_id)
         movieid=review.movieid
@@ -330,7 +249,7 @@ def delete_review(request,review_id):
         movie_id=movieid1.id
         #check if the reviews by the logged in user
         if request.user==review.userid:
-            #grant permission to dlete
+            #grant permission to delete
             review.delete()
         
         return redirect("movies:detail",movie_id)
