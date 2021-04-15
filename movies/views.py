@@ -27,17 +27,14 @@ def recommendation(request):
     ratings = pd.read_sql_query('SELECT * from "movies_ratings"', engine)
 
     current_user=request.user.id
-    print(current_user)
 
     ratings=pd.merge(movies,ratings).drop(columns=["genres"])
 
-    print("RATINGSSSSSSSSSSSSSSSSSSSSSSSSS\n",ratings)
     user_ratings=ratings.pivot_table(index={'userId_id'},columns={'title'},values={'rating'})
     movie_user_rating_pivot=user_ratings
 
 
     user_ratings=user_ratings.fillna(0)
-    print("users\n",user_ratings)
 
     file_ = open(os.path.join(settings.BASE_DIR, 'testfile'),'rb')
     pickle_model = pickle.load(file_)
@@ -89,7 +86,6 @@ def recommendation(request):
             return user_full, recommendations,title
 
     already_rated, predictions,title = recommend_movies(preds_df,current_user, movies, ratings, 50)
-    print(predictions)
 
     context = {
          "object_list": predictions,
@@ -145,54 +141,18 @@ def detail(request,id):
     rating = Ratings.objects.filter(movieid=id)
     rating=rating.aggregate(rating=Avg('rating'))
 
-    print("id=",id)
-    print("\n detail=",detail)
-    print("\n rating=",rating)
-    print("userid",request.user.id)
     reviews=Ratings.objects.filter(movieid=id).order_by("comment")
    
     condition="false"
     count=0
     for review in reviews:
         if request.user.id==review.userid.id:
-            print("user has reviewed")
             condition="true"
             break
         else:
-            print("not reviewed")
             condition="false"
-    print("count",count)
     for review in reviews:
         count=count+1
-
-    engine = create_engine('postgresql://postgres:admin@localhost:1234/movieRecommend')
-    movies = pd.read_sql_query('SELECT * from "movies_movies"', engine)
-
-    for index, rows in movies.iterrows():
-        if (detail_movie in (rows.title)):
-            print(rows.id)
-            movie_ids = rows.id - 1
-            break
-    print(movie_ids)
-    movies['genre'] = movies['genres']
-    movies['genre'] = movies['genre'].str.split('|')
-    movies['genres'] = movies['genres'].fillna("").astype('str')
-
-    tf = TfidfVectorizer(analyzer='word', ngram_range=(1, 2), min_df=0, stop_words='english')
-    tfidf_matrix = tf.fit_transform(movies['title'])
-
-    cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
-    cosine_sim[:4, :4]
-
-    indices = pd.Series(movies.index, index=movies['title'])
-
-    sim_scores = list(enumerate(cosine_sim[movie_ids]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    sim_scores = sim_scores[1:21]
-    movie_indices = [i[0] for i in sim_scores]
-    similar_movie = movies.iloc[movie_indices]
-
-    similar_movie = similar_movie.head(8)
 
     current_user=request.user.id
     context = {
