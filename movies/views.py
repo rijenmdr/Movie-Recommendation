@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic import ListView
 from pandas.tests.groupby.test_value_counts import df
-
 from .models import Movies, Ratings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import numpy as np
@@ -17,8 +16,7 @@ from django_pandas.io import read_frame
 import psycopg2
 from sqlalchemy import create_engine
 from accounts.forms import ReviewForm
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 def recommendation(request):
 
@@ -43,7 +41,7 @@ def recommendation(request):
 
     preds_df = pd.DataFrame(pickle_model, index=user_ratings.index,columns = user_ratings.columns)
 
-
+    print(preds_df)
     def recommend_movies(predictions_df, userID, movies_df, original_ratings_df, num_recommendations=5):
          # Get and sort the user's predictions
             user_row_number = userID - 1 # UserID starts at 1, not 0
